@@ -1,0 +1,9 @@
+item,value
+random_state,42
+test_size,0.2
+rows_after_cleaning,299
+features_with_time,12
+features_without_time,11
+train_rows,239
+test_rows,60
+target_column,DEATH_EVENT
