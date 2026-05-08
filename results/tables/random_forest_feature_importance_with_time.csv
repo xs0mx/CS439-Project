@@ -1,0 +1,13 @@
+feature,importance,time_version
+time,0.3943859620499636,with time
+serum_creatinine,0.16076390304669447,with time
+ejection_fraction,0.13548307227306672,with time
+creatinine_phosphokinase,0.06702881735080853,with time
+age,0.06437083561781529,with time
+platelets,0.06219030044265236,with time
+serum_sodium,0.06009097160112916,with time
+high_blood_pressure,0.012614599479308562,with time
+anaemia,0.011956398433630893,with time
+sex,0.01053064888737393,with time
+smoking,0.010394081252365534,with time
+diabetes,0.010190409565191043,with time

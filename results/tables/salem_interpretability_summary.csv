@@ -1,0 +1,5 @@
+section,top_features
+Logistic Regression with time,"time (1.5459), ejection_fraction (0.9506), serum_creatinine (0.8790), diabetes (0.4908), age (0.4201)"
+Logistic Regression without time,"serum_creatinine (0.9734), ejection_fraction (0.7577), anaemia (0.5985), high_blood_pressure (0.5810), diabetes (0.5092)"
+Random Forest with time,"time (0.3944), serum_creatinine (0.1608), ejection_fraction (0.1355), creatinine_phosphokinase (0.0670), age (0.0644)"
+Random Forest without time,"serum_creatinine (0.2303), ejection_fraction (0.2122), creatinine_phosphokinase (0.1215), age (0.1193), platelets (0.1182)"
