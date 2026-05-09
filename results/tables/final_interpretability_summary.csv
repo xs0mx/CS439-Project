@@ -1,0 +1,5 @@
+source,top_features
+Logistic Regression coefficients with time,"time, ejection_fraction, serum_creatinine, diabetes, age"
+Logistic Regression coefficients without time,"serum_creatinine, ejection_fraction, anaemia, high_blood_pressure, diabetes"
+Random Forest feature importance with time,"time, serum_creatinine, ejection_fraction, creatinine_phosphokinase, age"
+Random Forest feature importance without time,"serum_creatinine, ejection_fraction, creatinine_phosphokinase, age, platelets"

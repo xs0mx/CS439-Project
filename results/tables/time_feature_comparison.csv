@@ -1,0 +1,21 @@
+model,metric,with_time,without_time,difference_with_minus_without
+Logistic Regression,accuracy,0.8,0.7,0.10000000000000009
+Logistic Regression,precision,0.7333333333333333,0.5263157894736842,0.2070175438596491
+Logistic Regression,recall,0.5789473684210527,0.5263157894736842,0.052631578947368474
+Logistic Regression,f1,0.6470588235294118,0.5263157894736842,0.12074303405572762
+Logistic Regression,roc_auc,0.8575096277278563,0.7406931964056482,0.11681643132220809
+Decision Tree,accuracy,,,
+Decision Tree,precision,,,
+Decision Tree,recall,,,
+Decision Tree,f1,,,
+Decision Tree,roc_auc,,,
+Random Forest,accuracy,0.8333333333333334,0.7333333333333333,0.10000000000000009
+Random Forest,precision,0.8461538461538461,0.6153846153846154,0.23076923076923073
+Random Forest,recall,0.5789473684210527,0.4210526315789473,0.15789473684210537
+Random Forest,f1,0.6875,0.5,0.1875
+Random Forest,roc_auc,0.8992297817715019,0.7965340179717587,0.10269576379974321
+Gradient Boosting,accuracy,,,
+Gradient Boosting,precision,,,
+Gradient Boosting,recall,,,
+Gradient Boosting,f1,,,
+Gradient Boosting,roc_auc,,,
