@@ -1,12 +1,12 @@
-feature,coefficient,absolute_coefficient,direction,time_version
-serum_creatinine,0.9733988877944353,0.9733988877944353,higher predicted risk,without time
-ejection_fraction,-0.7577041129991634,0.7577041129991634,lower predicted risk,without time
-anaemia,0.5985050792031592,0.5985050792031592,higher predicted risk,without time
-high_blood_pressure,0.5809794434207979,0.5809794434207979,higher predicted risk,without time
-diabetes,0.5091649249695407,0.5091649249695407,higher predicted risk,without time
-age,0.4647125903702978,0.4647125903702978,higher predicted risk,without time
-smoking,0.3818849065155854,0.3818849065155854,higher predicted risk,without time
-creatinine_phosphokinase,0.3184473813011826,0.3184473813011826,higher predicted risk,without time
-sex,-0.20943375527652797,0.20943375527652797,lower predicted risk,without time
-serum_sodium,-0.18364058161308117,0.18364058161308117,lower predicted risk,without time
-platelets,-0.1207505211874756,0.1207505211874756,lower predicted risk,without time
+feature,coefficient,absolute_coefficient,time_version
+serum_creatinine,0.9733988877944353,0.9733988877944353,without_time
+ejection_fraction,-0.7577041129991634,0.7577041129991634,without_time
+anaemia,0.5985050792031592,0.5985050792031592,without_time
+high_blood_pressure,0.5809794434207979,0.5809794434207979,without_time
+diabetes,0.5091649249695407,0.5091649249695407,without_time
+age,0.4647125903702978,0.4647125903702978,without_time
+smoking,0.3818849065155854,0.3818849065155854,without_time
+creatinine_phosphokinase,0.3184473813011826,0.3184473813011826,without_time
+sex,-0.20943375527652797,0.20943375527652797,without_time
+serum_sodium,-0.18364058161308117,0.18364058161308117,without_time
+platelets,-0.1207505211874756,0.1207505211874756,without_time

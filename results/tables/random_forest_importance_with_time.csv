@@ -1,0 +1,13 @@
+model,feature,importance,time_version
+Random Forest,time,0.36351422092602587,with_time
+Random Forest,serum_creatinine,0.1583176334572926,with_time
+Random Forest,ejection_fraction,0.12896791858748638,with_time
+Random Forest,creatinine_phosphokinase,0.07851183336137184,with_time
+Random Forest,platelets,0.0736237872501163,with_time
+Random Forest,age,0.06699063562599242,with_time
+Random Forest,serum_sodium,0.06324497518986934,with_time
+Random Forest,anaemia,0.016786986943799206,with_time
+Random Forest,high_blood_pressure,0.01386264212881835,with_time
+Random Forest,smoking,0.013487798191956826,with_time
+Random Forest,diabetes,0.011834191420249508,with_time
+Random Forest,sex,0.010857376917021405,with_time

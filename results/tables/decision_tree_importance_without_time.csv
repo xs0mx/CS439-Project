@@ -1,0 +1,12 @@
+model,feature,importance,time_version
+Decision Tree,serum_creatinine,0.372389199763991,without_time
+Decision Tree,ejection_fraction,0.2697885214966988,without_time
+Decision Tree,age,0.13902437814215704,without_time
+Decision Tree,serum_sodium,0.08655219522170997,without_time
+Decision Tree,creatinine_phosphokinase,0.07025131380267857,without_time
+Decision Tree,sex,0.038216370896830006,without_time
+Decision Tree,smoking,0.02377802067593444,without_time
+Decision Tree,high_blood_pressure,1.2585340441732918e-16,without_time
+Decision Tree,platelets,0.0,without_time
+Decision Tree,anaemia,0.0,without_time
+Decision Tree,diabetes,0.0,without_time

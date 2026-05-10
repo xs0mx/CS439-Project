@@ -1,0 +1,12 @@
+model,feature,importance,time_version
+Gradient Boosting,serum_creatinine,0.32281529243768103,without_time
+Gradient Boosting,ejection_fraction,0.26183773346422673,without_time
+Gradient Boosting,creatinine_phosphokinase,0.12894505181481247,without_time
+Gradient Boosting,age,0.10174434761793415,without_time
+Gradient Boosting,platelets,0.07728108471528718,without_time
+Gradient Boosting,serum_sodium,0.03810587715103562,without_time
+Gradient Boosting,anaemia,0.0166620699991067,without_time
+Gradient Boosting,high_blood_pressure,0.014705706515373236,without_time
+Gradient Boosting,smoking,0.013649686985155339,without_time
+Gradient Boosting,diabetes,0.013114360214405582,without_time
+Gradient Boosting,sex,0.011138789084982026,without_time
