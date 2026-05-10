@@ -1,4 +1,0 @@
-- The highest ROC-AUC among the completed models was achieved by Random Forest (with time), with ROC-AUC = 0.899.
-- The highest recall among the completed models was achieved by Logistic Regression (with time), with recall = 0.579.
-- The largest ROC-AUC difference from including the time feature was for Logistic Regression, with a with-time minus without-time difference of 0.117.
-- The interpretability results should be discussed using the saved coefficient and feature-importance tables.
