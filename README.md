@@ -112,4 +112,6 @@ Run the notebooks in this order:
 - seaborn
 
 ## Notes
-This project is exploratory and is not intended for clinical use. The dataset is small, so the results should be interpreted carefully.
+Because this project uses a small dataset and the models were run multiple times during development, some reported values may differ slightly across notebooks, figures, commits, or reruns. These differences can happen because train-test splits, cross-validation folds, and model randomness may produce slightly different results each time the code is executed.
+
+The overall project idea and conclusions remain the same: we compare interpretable models and ensemble models for heart-failure mortality prediction, with recall treated as the most important metric because missing high-risk patients is costly. The results should be interpreted as exploratory rather than exact deployment-level performance, especially because the dataset contains only 299 observations.
