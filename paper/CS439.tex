@@ -1,0 +1,318 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2024}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[font=small,skip=3pt]{caption}
+
+\graphicspath{{./}{figures/}{results/figures/}}
+
+% Cleaner spacing without forcing awkward white gaps.
+\raggedbottom
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{2pt}
+\setlist[itemize]{noitemsep, topsep=2pt, leftmargin=*}
+
+\title{Heart-Failure Mortality Prediction Using Classical Machine Learning Models}
+
+\author{
+  Tala Alkabbani \\
+  NetID: ta671 \\
+  Section ID: 7 \\
+  Rutgers University
+  \And
+  Salem Nasereddin \\
+  NetID: sn1037 \\
+  Section ID: 8 \\
+  Rutgers University
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Heart failure is associated with high morbidity and mortality, making early identification of high-risk patients an important clinical prediction task. This project compares classical machine learning models for binary mortality prediction using a public heart-failure clinical records dataset with 299 observations, 12 predictor variables, and one binary outcome. Logistic Regression, Decision Tree, Random Forest, and Gradient Boosting were evaluated using accuracy, precision, recall, F1-score, ROC-AUC, repeated stratified cross-validation, confusion matrices, ROC curves, calibration plots, and feature-importance analysis. Recall was treated as the primary practical metric because false negatives represent missed mortality-risk cases. Random Forest achieved the strongest overall cross-validated performance, with the highest mean accuracy, recall, and ROC-AUC. Gradient Boosting was also competitive, while Logistic Regression remained a strong interpretable baseline. Decision Tree performance was weaker and more variable. These findings suggest that ensemble methods are promising for this exploratory task, but conclusions remain limited by the small sample size, single-dataset scope, and lack of external validation.
+
+\medskip
+\noindent Code: \url{https://github.com/xs0mx/CS439-Project}
+
+\noindent Video: \url{https://drive.google.com/file/d/1OJS3W5TRBt2Fc-HTiccgzCoEhBO_OhEe/view?usp=sharing}
+\end{abstract}
+
+\section{Introduction}
+
+Heart failure is a chronic condition in which the heart cannot pump blood effectively enough to meet the body's needs. Predicting mortality risk from clinical measurements may help identify patients who require closer monitoring or follow-up. However, healthcare prediction requires more than high accuracy: the model must also be evaluated for sensitivity, uncertainty, calibration, and interpretability.
+
+This project studies binary classification of mortality risk in heart-failure patients. The dataset contains 299 patient records and 13 columns: 12 predictors and the binary target variable \texttt{DEATH\_EVENT}. The target is moderately imbalanced, with 203 negative cases and 96 positive cases. Because the positive class represents mortality, this project emphasizes recall. A false negative means that a patient who experienced the death event was not identified as high risk.
+
+Four models were compared: Logistic Regression, Decision Tree, Random Forest, and Gradient Boosting. Logistic Regression and Decision Tree represent more interpretable approaches, while Random Forest and Gradient Boosting represent ensemble methods with greater predictive flexibility. The goal is not to claim deployment readiness, but to compare model behavior, identify metric tradeoffs, and determine which models appear most promising for future validation.
+
+\section{Related Work and Background}
+
+Classical machine learning remains useful for structured clinical datasets because many healthcare datasets are tabular, relatively small, and composed of interpretable clinical measurements. Logistic Regression is widely used for binary clinical prediction because its coefficients indicate the direction and relative strength of association between predictors and the outcome. Decision Trees provide rule-based interpretability but can be unstable on small datasets.
+
+Random Forest reduces the instability of a single tree by averaging many trees, often improving generalization and capturing nonlinear patterns. Gradient Boosting builds trees sequentially so that later trees correct earlier errors, which can produce strong performance on tabular datasets. However, both ensemble methods require careful interpretation because feature importance describes predictive association, not causality.
+
+Evaluation in this task requires more than accuracy. Precision measures how many predicted mortality cases were correct, while recall measures how many actual mortality cases were detected. These metrics can trade off against each other. ROC-AUC evaluates how well a model ranks positive cases above negative cases across thresholds, while calibration evaluates whether predicted probabilities match observed outcome frequencies. These measures together give a more complete view of model behavior.
+
+\section{Method}
+
+\subsection{Dataset}
+
+The dataset includes the following variables: \texttt{age}, \texttt{anaemia}, \texttt{creatinine\_phosphokinase}, \texttt{diabetes}, \texttt{ejection\_fraction}, \texttt{high\_blood\_pressure}, \texttt{platelets}, \texttt{serum\_creatinine}, \texttt{serum\_sodium}, \texttt{sex}, \texttt{smoking}, \texttt{time}, and \texttt{DEATH\_EVENT}. The exploratory analysis found no missing values and no duplicate rows. Several variables are binary indicators, while others are continuous clinical measurements.
+
+The feature \texttt{time} represents follow-up time and is especially important. Two feature sets were prepared: one including \texttt{time} and one excluding it. This comparison matters because \texttt{time} may be highly predictive but may not always be available in the same way for prospective baseline prediction.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.42\linewidth]{class_balance.png}
+\caption{Target class distribution. The dataset contains 203 non-death cases and 96 death-event cases, showing moderate class imbalance.}
+\label{fig:class_balance}
+\end{figure}
+
+\subsection{Preprocessing and Models}
+
+The preprocessing workflow checked missing values, removed duplicates if present, separated features from the target, and created a stratified train-test split. The split contained 239 training observations and 60 testing observations. Logistic Regression used standardized continuous features, while tree-based models used unscaled features because tree splits are threshold-based.
+
+The four models were implemented as follows. Logistic Regression used balanced class weights and \texttt{max\_iter=1000}. Decision Tree used \texttt{max\_depth=4} and balanced class weights. Random Forest used 300 trees and balanced class weights. Gradient Boosting used 100 estimators, learning rate 0.05, and maximum depth 3.
+
+These models were selected to compare interpretability and predictive flexibility. Logistic Regression provides coefficient-based explanations. Decision Tree provides transparent rule-based structure. Random Forest and Gradient Boosting are more flexible ensemble methods that can capture nonlinear relationships and feature interactions, but their predictions are less directly interpretable.
+
+\section{Evaluation}
+
+The main evaluation used Repeated Stratified 5-Fold Cross-Validation with 10 repeats. Stratification preserved class proportions across folds, and repetition reduced dependence on any single split. The main metrics were accuracy, precision, recall, F1-score, and ROC-AUC. Recall was treated as the primary practical metric because missed mortality cases are costly. ROC-AUC and calibration were treated as secondary criteria because they measure discrimination and probability reliability.
+
+The analysis also used a held-out test split to produce confusion matrices, ROC curves, calibration plots, and feature-importance visualizations. Cross-validation provides the more reliable model comparison, while the test split provides concrete examples of model behavior.
+
+\subsection{Evaluation Priorities}
+
+The evaluation was designed around both statistical performance and practical clinical interpretation. Accuracy was reported because it summarizes overall correctness, but it was not treated as the most important metric. In this dataset, the positive class represents death events, so a false negative is more serious than a false positive. For that reason, recall was emphasized as the primary practical metric.
+
+Precision and F1-score were included to show the tradeoff created by recall-focused evaluation. A model can increase recall by labeling more patients as high risk, but this may also increase false positives and reduce precision. F1-score provides a combined summary of precision and recall, although it does not replace direct inspection of each metric. ROC-AUC was used to evaluate discrimination across thresholds, while calibration plots were used to examine whether predicted probabilities were reasonably aligned with observed outcomes.
+
+This evaluation framework is especially important for a small clinical dataset. A single train-test split can be sensitive to which patients happen to fall into the test set, so repeated stratified cross-validation was used as the main comparison. The held-out test split was still useful for producing confusion matrices and visualizations, but the repeated cross-validation results were treated as the stronger basis for comparing models.
+
+\section{Results}
+
+\subsection{Cross-Validated Performance}
+
+Table~\ref{tab:cv_results} reports cross-validated performance as mean with 95\% confidence interval.
+
+\begin{table}[!htbp]
+\centering
+\caption{Repeated stratified cross-validated performance.}
+\label{tab:cv_results}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{Recall} & \textbf{ROC-AUC} \\
+\midrule
+Logistic Regression & 0.825 (0.741--0.883) & 0.673 (0.526--0.842) & 0.871 (0.794--0.924) \\
+Decision Tree & 0.769 (0.683--0.833) & 0.652 (0.455--0.842) & 0.739 (0.638--0.833) \\
+Random Forest & 0.842 (0.767--0.913) & 0.704 (0.532--0.899) & 0.908 (0.843--0.961) \\
+Gradient Boosting & 0.827 (0.767--0.895) & 0.701 (0.474--0.848) & 0.888 (0.786--0.947) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Random Forest achieved the highest mean accuracy, recall, and ROC-AUC. Gradient Boosting was close behind, especially in recall and ROC-AUC. Logistic Regression also performed strongly, suggesting that the dataset contains meaningful linear signal. Decision Tree had the weakest mean ROC-AUC and accuracy, indicating weaker generalization. The confidence intervals overlap, especially for recall, so the results should be interpreted as comparative evidence rather than definitive proof that one model is universally superior.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.47\linewidth]{final_recall_comparison.png}
+\hfill
+\includegraphics[width=0.47\linewidth]{final_roc_auc_comparison.png}
+\caption{Model comparison by recall and ROC-AUC. Recall reflects detection of actual death-event cases, while ROC-AUC reflects discrimination across thresholds.}
+\label{fig:model_comparison}
+\end{figure}
+
+\subsection{Single Train-Test Split Results}
+
+Table~\ref{tab:test_results} summarizes the held-out test results with and without the \texttt{time} feature. Including \texttt{time} improved performance for Logistic Regression, Random Forest, and Gradient Boosting. For example, Random Forest ROC-AUC increased from 0.797 without \texttt{time} to 0.899 with \texttt{time}. This confirms that \texttt{time} is highly informative, but it also requires careful interpretation because follow-up time may not be appropriate for every prospective prediction setting.
+
+\begin{table}[!htbp]
+\centering
+\caption{Held-out test performance with and without \texttt{time}.}
+\label{tab:test_results}
+\scriptsize
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llccccc}
+\toprule
+\textbf{Model} & \textbf{Feature Set} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC-AUC} \\
+\midrule
+Logistic Regression & With time & 0.800 & 0.733 & 0.579 & 0.647 & 0.858 \\
+Logistic Regression & Without time & 0.700 & 0.526 & 0.526 & 0.526 & 0.741 \\
+Decision Tree & With time & 0.783 & 0.636 & 0.737 & 0.683 & 0.778 \\
+Decision Tree & Without time & 0.717 & 0.538 & 0.737 & 0.622 & 0.744 \\
+Random Forest & With time & 0.833 & 0.846 & 0.579 & 0.688 & 0.899 \\
+Random Forest & Without time & 0.733 & 0.615 & 0.421 & 0.500 & 0.797 \\
+Gradient Boosting & With time & 0.833 & 0.800 & 0.632 & 0.706 & 0.868 \\
+Gradient Boosting & Without time & 0.700 & 0.538 & 0.368 & 0.438 & 0.766 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+The test-split results show the importance of reporting more than one metric. Some models achieved strong accuracy but lower recall, meaning they still missed death-event cases. This supports the project decision to emphasize recall and ROC-AUC rather than relying only on accuracy.
+
+\subsection{ROC Curves and Confusion Matrices}
+
+The ROC curves support the numerical ROC-AUC results. Random Forest and Gradient Boosting ranked mortality risk more effectively than the single Decision Tree, while Logistic Regression remained competitive. However, ROC-AUC alone does not determine the best clinical threshold because the final decision threshold controls the recall-precision tradeoff.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.23\linewidth]{roc_logistic_regression_with_time.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{roc_decision_tree_with_time.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{roc_random_forest_with_time.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{roc_gradient_boosting_with_time.png}
+\caption{ROC curves for the four models using the \texttt{time} feature. The ensemble models show stronger discrimination than the single Decision Tree.}
+\label{fig:roc_curves}
+\end{figure}
+
+The confusion matrices provide a concrete view of default-threshold behavior. On the held-out test set, Decision Tree detected more death-event cases but produced more false positives. Random Forest and Gradient Boosting showed stronger balance between overall accuracy and discrimination, but still missed some positive cases. This suggests that threshold tuning would be important in future recall-sensitive work.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.43\linewidth]{confusion_matrix_random_forest_with_time.png}
+\hfill
+\includegraphics[width=0.43\linewidth]{confusion_matrix_gradient_boosting_with_time.png}
+\caption{Confusion matrices for Random Forest and Gradient Boosting with \texttt{time}. These plots show default-threshold classification behavior on the held-out test set.}
+\label{fig:confusion}
+\end{figure}
+
+\subsection{Calibration and Interpretability}
+
+Calibration compares predicted probabilities with observed mortality frequencies. This is important because a model may rank patients well while still producing probabilities that are too high or too low. Logistic Regression is useful as an interpretable probability-estimation baseline, while ensemble methods may require additional calibration if probabilities are used directly in decision-making.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.23\linewidth]{calibration_Logistic_Regression.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{calibration_Decision_Tree.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{calibration_Random_Forest.png}
+\hfill
+\includegraphics[width=0.23\linewidth]{calibration_Gradient_Boosting.png}
+\caption{Calibration plots for all four models. Calibration evaluates whether predicted probabilities align with observed death-event frequencies.}
+\label{fig:calibration}
+\end{figure}
+
+Feature-importance analysis showed that \texttt{time}, \texttt{serum\_creatinine}, \texttt{ejection\_fraction}, and \texttt{age} were repeatedly influential. In Logistic Regression, higher \texttt{serum\_creatinine}, diabetes, and age increased predicted risk, while higher \texttt{ejection\_fraction} and longer \texttt{time} lowered predicted risk. These findings are predictive associations only and should not be interpreted as causal claims.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.43\linewidth]{logistic_coefficients_with_time.png}
+\hfill
+\includegraphics[width=0.43\linewidth]{feature_importance_Random_Forest.png}
+\caption{Interpretability visualizations for Logistic Regression and Random Forest. These plots show coefficient direction and tree-based feature importance.}
+\label{fig:importance}
+\end{figure}
+
+The tree-based importance plots provide an additional comparison between the standalone Decision Tree and the boosted ensemble model. While feature rankings vary by model, the repeated appearance of \texttt{time}, \texttt{serum\_creatinine}, \texttt{ejection\_fraction}, and \texttt{age} suggests that the models learned from clinically plausible signals.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.43\linewidth]{feature_importance_Decision_Tree.png}
+\hfill
+\includegraphics[width=0.43\linewidth]{feature_importance_Gradient_Boosting.png}
+\caption{Feature-importance plots for Decision Tree and Gradient Boosting. These visualizations support the comparison between interpretable and ensemble tree-based models.}
+\label{fig:tree_boost_importance}
+\end{figure}
+
+\subsection{Model Selection Summary}
+
+Overall model selection depends on the intended use case. If the goal is strongest average predictive performance, Random Forest is the best candidate in this experiment because it achieved the highest mean accuracy, recall, and ROC-AUC. If the goal is a competitive ensemble alternative, Gradient Boosting is also reasonable because its recall and ROC-AUC were close to Random Forest. If the goal is interpretability and simpler probability estimates, Logistic Regression remains useful despite slightly lower recall. The single Decision Tree is easier to explain but had weaker average discrimination and less stable performance.
+
+Because this is a small exploratory study, the final model should not be selected based only on the highest mean score. The confidence intervals show meaningful uncertainty, especially for recall. Therefore, the strongest conclusion is that Random Forest appears most promising for future validation, while Logistic Regression remains the most transparent baseline.
+
+\subsection{Error Analysis and Practical Interpretation}
+
+The most important error type in this project is the false negative. A false negative occurs when the model predicts that a patient is lower risk even though the patient belongs to the death-event class. In a healthcare screening context, this type of error is more concerning than a false positive because it may represent a missed opportunity for closer monitoring or earlier intervention. This is why recall was emphasized throughout the evaluation. However, maximizing recall alone is not always ideal because a model can improve recall by labeling many more patients as high risk, which may also increase false positives.
+
+False positives are still important because they can create unnecessary follow-up, patient anxiety, and additional workload. Therefore, the goal is not simply to choose the model with the highest recall in one test split. A more balanced decision should consider recall, precision, ROC-AUC, calibration, and stability across validation folds. In this project, Random Forest provided the strongest overall balance because it achieved the highest cross-validated recall and ROC-AUC, while Gradient Boosting performed similarly. Logistic Regression remained valuable because it provided a simpler and more interpretable baseline.
+
+The confusion matrices help explain this tradeoff more clearly than accuracy alone. A model with high accuracy can still miss positive cases if the negative class is more common. Since the dataset contains more non-death cases than death-event cases, accuracy may favor models that classify the majority class well. For this reason, the confusion matrices were used to inspect how many death-event cases were detected and how many were missed at the default threshold. These results show that threshold selection would be an important next step if the model were optimized specifically for screening.
+
+Calibration also affects practical interpretation. ROC-AUC measures ranking ability, but it does not guarantee that predicted probabilities are numerically reliable. For example, a model may correctly rank one patient as riskier than another while still overestimating or underestimating the actual probability of death. If a model is used only to prioritize patients for further review, discrimination may be sufficient. If a predicted probability is communicated directly as a risk estimate, calibration becomes much more important. This distinction is why calibration plots were included as part of the evaluation.
+
+The interpretability results also support practical understanding of the models. Features such as \texttt{time}, \texttt{serum\_creatinine}, \texttt{ejection\_fraction}, and \texttt{age} appeared important across multiple models. This consistency suggests that the models relied on clinically plausible signals rather than only random noise. However, these results should be interpreted as predictive patterns, not causal relationships. The analysis can show which variables were useful for prediction, but it cannot prove that changing one variable would change mortality risk.
+
+Overall, the error analysis supports the main conclusion of the project. Random Forest appears to be the strongest candidate for future validation because it performed best across the primary cross-validated metrics. Gradient Boosting is also competitive and may be useful as an alternative ensemble model. Logistic Regression remains important because it is easier to interpret and may be preferable when transparency is prioritized. The final choice of model would depend on the intended clinical use case, especially whether the goal is risk ranking, probability estimation, or high-recall screening.
+
+\subsection{Clinical Relevance of the Predictive Features}
+
+The most influential predictors identified by the models were also clinically reasonable. For example, \texttt{serum\_creatinine} is related to kidney function, and abnormal kidney function can be important in patients with heart failure. \texttt{Ejection\_fraction} measures how effectively the heart pumps blood, so it is directly relevant to heart-failure severity. \texttt{Age} is also a plausible risk factor because older patients may have greater clinical vulnerability and more comorbid conditions. The repeated importance of these variables across different models suggests that the models were not relying only on arbitrary statistical patterns.
+
+At the same time, the importance of \texttt{time} requires careful interpretation. Because \texttt{time} represents follow-up duration, it may contain information that is strongly associated with the outcome. Models that include \texttt{time} may therefore perform better, but this does not automatically mean they are better for every real prediction setting. If the goal is to predict mortality risk at the beginning of care, \texttt{time} may not be available in the same way. This makes the with-time and without-time comparison important because it shows how model performance changes when this potentially sensitive feature is removed.
+
+These feature patterns strengthen the exploratory value of the project. The models identified variables that are understandable in the context of heart-failure risk, while also revealing that model performance depends heavily on how the prediction problem is defined. Therefore, future work should not only compare algorithms, but also define the clinical timing of prediction more carefully.
+
+\section{Discussion}
+
+The results suggest that ensemble models provide the strongest predictive performance on this dataset. Random Forest achieved the highest cross-validated accuracy, recall, and ROC-AUC, while Gradient Boosting was close behind. Logistic Regression remained a strong baseline because it provided competitive discrimination with clearer interpretability. Decision Tree was useful for transparency but showed weaker average performance and less stable generalization.
+
+The main practical emphasis was recall. Random Forest had the highest mean recall at 0.704, followed closely by Gradient Boosting at 0.701. However, recall confidence intervals were wide, reflecting the small dataset and limited number of positive cases. Therefore, the model ranking should be interpreted cautiously. The results support Random Forest as the strongest model in this experiment, but not as a deployment-ready clinical system.
+
+The \texttt{time} feature was highly predictive. Models with \texttt{time} usually performed better than models without it. This is important but also a limitation because the meaning of \texttt{time} depends on the prediction setting. If prediction is intended at baseline, follow-up time may introduce information that would not be available prospectively. Future work should define the prediction time point more precisely before selecting the final feature set.
+
+Calibration and interpretability also affect model choice. If the goal is ranking patients by risk, Random Forest may be preferable. If the goal is communicating estimated risk probabilities, Logistic Regression or calibrated ensemble methods may be more appropriate. Feature-importance results were clinically plausible, but they do not establish causality.
+
+\section{Limitations}
+
+This project has several limitations. First, the dataset contains only 299 observations and 96 positive cases, so performance estimates are sensitive to sampling variation. Second, the study uses a single public dataset, so external validity is unknown. Third, the class distribution is moderately imbalanced, and false negatives are especially important in this task. Fourth, the \texttt{time} feature may not be appropriate for every intended prediction scenario. Fifth, default thresholds were used for many test-set analyses, but threshold tuning would be needed in a recall-sensitive setting. Finally, feature-importance methods describe predictive associations rather than causal clinical relationships.
+
+Another limitation is that the dataset does not provide enough information to fully evaluate clinical deployment conditions. For example, the analysis does not include external hospital validation, prospective testing, fairness analysis across patient subgroups, or cost-sensitive threshold optimization. These steps would be necessary before the model could be considered for real clinical decision support.
+
+\section{Conclusion}
+
+This project compared Logistic Regression, Decision Tree, Random Forest, and Gradient Boosting for heart-failure mortality prediction. Random Forest achieved the strongest cross-validated performance, with the highest mean accuracy, recall, and ROC-AUC. Gradient Boosting was also competitive, and Logistic Regression remained valuable because of its interpretability and probability-estimation behavior. Decision Tree was transparent but less reliable as a final predictive model.
+
+Overall, the findings suggest that ensemble models are promising for this exploratory task, but larger datasets, external validation, threshold tuning, and calibration analysis are needed before any clinical use could be considered.
+
+\section{Future Work}
+
+Future work should:
+\begin{itemize}
+    \item Validate the models on an external heart-failure dataset.
+    \item Define the intended prediction time point and reassess the use of \texttt{time}.
+    \item Tune classification thresholds to prioritize recall.
+    \item Apply calibration methods such as Platt scaling or isotonic regression.
+    \item Add patient-level interpretability methods such as SHAP.
+    \item Compare additional models such as regularized Logistic Regression or calibrated boosting.
+\end{itemize}
+
+\section*{References}
+
+\small
+
+[1] Chicco, D., and Jurman, G. Machine learning can predict survival of patients with heart failure from serum creatinine and ejection fraction alone. \textit{BMC Medical Informatics and Decision Making}, 20, 16, 2020.
+
+[2] Chicco, D. and Jurman, G. Heart Failure Clinical Records Dataset. UCI Machine Learning Repository, 2020.
+
+[3] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., and Duchesnay, E. Scikit-learn: Machine Learning in Python. \textit{Journal of Machine Learning Research}, 12, 2825--2830, 2011.
+
+[4] Breiman, L. Random forests. \textit{Machine Learning}, 45, 5--32, 2001.
+
+[5] Friedman, J. H. Greedy function approximation: A gradient boosting machine. \textit{Annals of Statistics}, 29(5), 1189--1232, 2001.
+
+[6] Rudin, C. Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. \textit{Nature Machine Intelligence}, 1, 206--215, 2019.
+
+[7] Fawcett, T. An introduction to ROC analysis. \textit{Pattern Recognition Letters}, 27(8), 861--874, 2006.
+
+\end{document}

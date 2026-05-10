@@ -1,7 +1,4 @@
-# Final Project
-
-## Project Title
-Interpretable vs Black-Box Models for Predicting Death Events in Heart Failure Patients
+# Interpretable vs Black-Box Models for Predicting Death Events in Heart Failure Patients
 
 ## Group Members
 - Tala Alkabbani
@@ -10,70 +7,109 @@ Interpretable vs Black-Box Models for Predicting Death Events in Heart Failure P
 ## Project Overview
 This project compares interpretable machine learning models and black-box models for predicting death events in heart failure patients.
 
-The main goal is to see whether simpler and more understandable models, like logistic regression and decision trees, can perform close to more complex models, like random forests and gradient boosting.
-
-This project is about more than just accuracy. Since this is a healthcare-related problem, it is also important to understand how the model makes predictions. A model that is easier to explain may be more useful in real-life medical settings.
-
-## Why This Project Matters
-Heart failure is a serious condition, and predicting which patients may be at higher risk can be helpful.
-
-In healthcare, predictions should be used carefully. The purpose of this project is not to replace doctors or medical judgment. Instead, the goal is to explore whether machine learning can support decision-making in a way that is both useful and understandable.
-
-We also want to compare performance fairly and look at which clinical features seem most important.
-
-## Research Question
-Can interpretable machine learning models predict death events in heart failure patients nearly as well as black-box models?
+The main question is whether simpler models, such as Logistic Regression and Decision Tree, can perform close to more complex models, such as Random Forest and Gradient Boosting.
 
 ## Dataset
-We are using the Heart Failure Clinical Records Dataset.
+The project uses the Heart Failure Clinical Records Dataset.
 
-The dataset includes patient health information such as:
-- age
-- anaemia
-- creatinine phosphokinase
-- diabetes
-- ejection fraction
-- high blood pressure
-- platelets
-- serum creatinine
-- serum sodium
-- sex
-- smoking
-- time
+- Rows: 299 patients
+- Target variable: `DEATH_EVENT`
+- Negative class: 203 patients
+- Positive class: 96 patients
 
-Target variable:
-- `DEATH_EVENT`
+Main features include age, anaemia, creatinine phosphokinase, diabetes, ejection fraction, high blood pressure, platelets, serum creatinine, serum sodium, sex, smoking, and time.
 
 ## Models
-The models planned for this project are:
+The models compared are:
 
-### Interpretable Models
-- Logistic Regression — TBD
-- Decision Tree — TBD
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- Gradient Boosting
 
-### Black-Box Models
-- Random Forest — TBD
-- Gradient Boosting — TBD
+Each model was tested with two feature sets:
 
-## Evaluation
-The models will be compared using:
-- Accuracy — TBD
-- Precision — TBD
-- Recall — TBD
-- F1-score — TBD
-- ROC-AUC — TBD
-- Confusion Matrix — TBD
+- With `time`
+- Without `time`
 
-Because this is a healthcare task, recall is especially important, since missing a high-risk patient could be harmful.
+## Evaluation Metrics
+The models were evaluated using:
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- Confusion Matrix
+
+Recall is important in this project because missing a high-risk patient is a serious issue.
+
+## Main Results
+
+| Model | Feature Set | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---:|---:|---:|---:|---:|
+| Logistic Regression | With time | 0.800 | 0.733 | 0.579 | 0.647 | 0.858 |
+| Logistic Regression | Without time | 0.700 | 0.526 | 0.526 | 0.526 | 0.741 |
+| Decision Tree | With time | 0.783 | 0.636 | 0.737 | 0.683 | 0.778 |
+| Decision Tree | Without time | 0.717 | 0.538 | 0.737 | 0.622 | 0.744 |
+| Random Forest | With time | 0.833 | 0.846 | 0.579 | 0.688 | 0.899 |
+| Random Forest | Without time | 0.733 | 0.615 | 0.421 | 0.500 | 0.797 |
+| Gradient Boosting | With time | 0.833 | 0.800 | 0.632 | 0.706 | 0.868 |
+| Gradient Boosting | Without time | 0.700 | 0.538 | 0.368 | 0.438 | 0.766 |
+
+## Main Findings
+Random Forest with time had the highest ROC-AUC.
+
+Decision Tree had the highest recall on the test split.
+
+Models generally performed better when the `time` feature was included.
+
+Important predictors included:
+
+- time
+- serum creatinine
+- ejection fraction
+- age
+- serum sodium
 
 ## Project Structure
+
 ```text
 final_project/
-│
 ├── data/
 ├── notebooks/
-├── src/
-├── results/
+│   ├── 01_eda.ipynb
+│   ├── 02_preprocessing.ipynb
+│   ├── 03_models.ipynb
+│   ├── 03_v2_models.ipynb
+│   ├── 04_interpretability.ipynb
+│   └── 05_final_results.ipynb
 ├── paper/
-├── requirements.txt
+├── results/
+│   ├── figures/
+│   ├── metrics/
+│   └── tables/
 └── README.md
+```
+
+## How to Run
+Run the notebooks in this order:
+
+```text
+01_eda.ipynb
+02_preprocessing.ipynb
+03_models.ipynb
+03_v2_models.ipynb
+04_interpretability.ipynb
+05_final_results.ipynb
+```
+
+## Libraries Used
+- pandas
+- numpy
+- scikit-learn
+- matplotlib
+- seaborn
+
+## Notes
+This project is exploratory and is not intended for clinical use. The dataset is small, so the results should be interpreted carefully.
